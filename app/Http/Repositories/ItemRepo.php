@@ -13,5 +13,39 @@ class ItemRepo
         $this->itemModel = $itemModel;
     }
 
+    public function createItem($itemData)
+    {
+        return $this->itemModel->create($itemData);
+    }
+
+    public function getAllItems()
+    {
+        return $this->itemModel->all();
+    }
+
+    public function findItemById($id)
+    {
+        return $this->itemModel->find($id);
+    }
+
+    public function updateItem($id, $itemData)
+    {
+        $item = $this->findItemById($id);
+        if ($item) {
+            $item->update($itemData);
+            return $item;
+        }
+        return null;
+    }
+
+    public function deleteItem($id)
+    {
+        $item = $this->findItemById($id);
+        if ($item) {
+            return $item->delete();
+        }
+        return false;
+    }
+
     
 }
