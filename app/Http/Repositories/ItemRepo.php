@@ -13,7 +13,7 @@ class ItemRepo
         $this->itemModel = $itemModel;
     }
 
-    public function createItem($itemData)
+    public function createItem(array $itemData): Item
     {
         return $this->itemModel->create($itemData);
     }
@@ -26,6 +26,16 @@ class ItemRepo
     public function findItemById($id)
     {
         return $this->itemModel->find($id);
+    }
+
+    public function findByName($name)
+    {
+        return $this->itemModel->where('name', $name)->first();
+    }
+
+    public function findBySku($sku)
+    {
+        return $this->itemModel->where('sku', $sku)->first();
     }
 
     public function updateItem($id, $itemData)

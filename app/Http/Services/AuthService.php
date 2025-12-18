@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\JsonResponse;
 use App\Http\Repositories\UserRepo;
 use App\Models\User;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class AuthService
 {
@@ -63,8 +64,20 @@ class AuthService
         return response()->json([ 'message' => 'Invalid credentials' ], 401);
     }
 
-    public function logout()
+    public function attemptLogout()
     {
-        Auth::logout();
+        $user = Auth::user();
+
+        if (! $user instanceof User) {
+            return response()->json(['message' => 'Authenticated user not found'], 401);
+        }
+
+        /** @var PersonalAccessToken|null $token */
+        $token = $user->currentAccessToken();
+        if ($token) {
+            $token->delete();
+        }
+
+        return response()->json(['message' => 'Logged out successfully'], 200);
     }
 }
