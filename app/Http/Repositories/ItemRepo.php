@@ -41,6 +41,12 @@ class ItemRepo
     public function updateItem($id, $itemData)
     {
         $item = $this->findItemById($id);
+
+        if(!$item)
+        {
+            return null;
+        }
+
         if ($item) {
             $item->update($itemData);
             return $item;
@@ -51,6 +57,12 @@ class ItemRepo
     public function deleteItem($id)
     {
         $item = $this->findItemById($id);
+
+        if(!$item)
+        {
+            return null;
+        }
+
         if ($item) {
             return $item->delete();
         }

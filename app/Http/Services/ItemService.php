@@ -23,4 +23,19 @@ class ItemService
     {
         return $this->itemRepo->getAllItems();
     }
+
+    public function itemFetchById($id)
+    {
+        return $this->itemRepo->findItemById($id);
+    }
+
+    public function itemFetchByName($name)
+    {
+        return $this->itemRepo->findByName($name);
+    }
+
+    public function itemFetchBySku($sku)
+    {
+        return $this->itemRepo->findBySku($sku);
+    }
 }

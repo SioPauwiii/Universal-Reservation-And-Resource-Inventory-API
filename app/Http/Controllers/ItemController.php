@@ -3,9 +3,9 @@
 // CRUD controller for Item model
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
-use App\Http\Requests\ItemRequest;
 use App\Http\Services\ItemService;
 use App\Http\Repositories\ItemRepo;
+use App\Http\Requests\ItemCreateRequest;
 
 class ItemController extends Controller
 {
@@ -16,7 +16,7 @@ class ItemController extends Controller
         $this->itemService = $itemService;
     }
 
-    public function store(ItemRequest $request)
+    public function create(ItemCreateRequest $request)
     {
         $payload = $request->validated();
         $item = $this->itemService->createItem($payload);
@@ -32,9 +32,72 @@ class ItemController extends Controller
     {
         $items = $this->itemService->getAllItems();
 
+        if (!$items || $items->isEmpty()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No items found',
+            ], 404);
+        }
+
         return response()->json([
             'success' => true,
             'items' => $items,
         ], 200);
+    }
+    
+    public function fetchOneById($id)
+    {
+        $item = $this->itemService->itemFetchById($id);
+
+        if (!$item) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Item not found',
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'item' => $item,
+        ], 200);
+    }
+
+    public function fetchOneByName($name)
+    {
+        $item = $this->itemService->itemFetchByName(urldecode($name));
+
+        if (!$item) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Item not found',
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'item' => $item,
+        ], 200);
+    }
+
+    public function fetchOneBySku($sku)
+    {
+        $item = $this->itemService->itemFetchBySku($sku);
+
+        if (!$item) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Item not found',
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'item' => $item,
+        ], 200);
+    }
+
+    public function search($data)
+    {
+
     }
 }
