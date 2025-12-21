@@ -19,3 +19,17 @@ Route::get('/items', [ItemController::class, 'fetchAll']);
 Route::get('/items/id/{id}', [ItemController::class, 'fetchOneById']);
 Route::get('/items/name/{name}', [ItemController::class, 'fetchOneByName']);
 Route::get('/items/sku/{sku}', [ItemController::class, 'fetchOneBySku']);
+
+// item SEARCH route
+Route::get('/items/find', [ItemController::class, 'search']);
+
+// item UPDATE route
+Route::patch('/items/update/{id}', [ItemController::class, 'update']);
+
+// item ARCHIVE/UNARCHIVE route
+Route::patch('/items/archive/{id}', [ItemController::class, 'archive']);
+Route::patch('/items/unarchive/{id}', [ItemController::class, 'unarchive']);
+
+// item DELETE route
+Route::delete('/items/delete/{id}', [ItemController::class, 'delete']);
+
