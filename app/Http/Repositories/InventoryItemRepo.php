@@ -24,7 +24,7 @@ class InventoryItemRepo
             'version' => $version,
         ]);
 
-        return $item->id;
+        return $item->id; 
     }
 
 	public function findByItemId(int $itemId)

@@ -23,7 +23,7 @@ class ItemService
     public function createItem(array $data)
     {
         $this->itemRepo->createItem($data);
-        $this->inventoryRepo->createInventoryItem($data['id'], $data['initial_stock'] ?? 1);
+        $this->inventoryRepo->createInventoryItem($data['id'], $data['total_stock'] ?? 1, $data['total_stock'] ?? 1);
     }
 
     public function getAllItems()
