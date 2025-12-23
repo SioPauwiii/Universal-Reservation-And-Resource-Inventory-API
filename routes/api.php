@@ -4,6 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CacheInspectorController;
+use App\Http\Services\CacheService;
 
 // user auth routes
 Route::post('/register', [AuthController::class, 'register']);
@@ -33,3 +35,6 @@ Route::patch('/items/unarchive/{id}', [ItemController::class, 'unarchive']);
 // item DELETE route
 Route::delete('/items/delete/{id}', [ItemController::class, 'delete']);
 
+// Cache inspection endpoint (for testing)
+Route::get('/redis-cache/inspect/{key}', [CacheInspectorController::class, 'inspect']);
+Route::post('/redis-cache/clear', [CacheService::class, 'clearAllCache']);
