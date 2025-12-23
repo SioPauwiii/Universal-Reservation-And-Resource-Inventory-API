@@ -2,10 +2,11 @@
 
 // CRUD controller for Item model
 namespace App\Http\Controllers;
-use Illuminate\Http\Request;
 use App\Http\Services\ItemService;
-use App\Http\Repositories\ItemRepo;
 use App\Http\Requests\ItemCreateRequest;
+use App\Http\Requests\ItemEditRequest;
+use App\Models\Item;
+use Illuminate\Http\Request;
 
 class ItemController extends Controller
 {
@@ -96,8 +97,101 @@ class ItemController extends Controller
         ], 200);
     }
 
-    public function search($data)
+    public function search(Request $request)
     {
+        $payload = $request->query('q') ?? $request->input('q') ?? null;
 
+        if (empty($payload)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Missing search query parameter `q`',
+            ], 400);
+        }
+
+        $item = $this->itemService->searchItem($payload);
+
+        if (!$item) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Item not found',
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'item' => $item,
+        ], 200);
+    }
+
+    public function update($id, ItemEditRequest $request)
+    {
+        $payload = $request->validated();
+        $item = $this->itemService->updateItem($id, $payload);
+
+        if (!$item) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Item not found or update failed',
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Item updated successfully',
+            'item' => $item,
+        ], 200);
+    }
+
+    public function archive($id)
+    {
+        $item = $this->itemService->archiveItem($id);
+
+        if (!$item) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Item not found or already archived',
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Item archived successfully',
+            'item' => $item,
+        ], 200);
+    }
+
+     public function unarchive($id)
+    {
+        $item = $this->itemService->unarchiveItem($id);
+
+        if (!$item) {
+            return response()->json([
+                'success' => false,
+                'message' => 'already unarchived',
+            ], 400);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Item unarchived successfully',
+            'item' => $item,
+        ], 200);
+    }
+
+    public function delete($id)
+    {
+        $deleted = $this->itemService->deleteItem($id);
+
+        if (!$deleted) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Item not found or delete failed',
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Item deleted successfully',
+        ], 200);
     }
 }

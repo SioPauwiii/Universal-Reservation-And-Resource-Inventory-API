@@ -9,15 +9,41 @@ use Illuminate\Validation\Rule;
 use Illuminate\Contracts\Validation\Validator as ValidationC;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class ItemCreateRequest extends FormRequest
+class ItemEditRequest extends FormRequest
 {
     use ApiValidationResponse, ItemDetailsValidation;
 
     public function rules(): array
     {
+        // determine the current item id to ignore for unique checks
+        $id = null;
+        $routeItem = $this->route('item');
+
+        if ($routeItem) {
+            if (is_numeric($routeItem)) {
+                $id = $routeItem;
+            } elseif (is_object($routeItem) && method_exists($routeItem, 'getKey')) {
+                $id = $routeItem->getKey();
+            }
+        } elseif ($this->route('id')) {
+            $id = $this->route('id');
+        } elseif ($this->input('id')) {
+            $id = $this->input('id');
+        }
+
         return [
-            'name' => 'required|string|unique:items,name|max:255',
-            'sku' => 'required|string|unique:items,sku|max:100',
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('items', 'name')->ignore($id),
+            ],
+            'sku' => [
+                'required',
+                'string',
+                'max:100',
+                Rule::unique('items', 'sku')->ignore($id),
+            ],
             'type' => ['required','string', Rule::in([
                 'physical','consumable','spaces','equipment','vehicle',
                 'appointment','event','session','rental','digital','personnel','ad-hoc'
@@ -48,6 +74,9 @@ class ItemCreateRequest extends FormRequest
         ];
     }
 
+    /**
+     * Run additional validation for details based on the selected type.
+     */
     protected function withValidator(ValidationC $validator)
     {
         $validator->after(function ($validator) {

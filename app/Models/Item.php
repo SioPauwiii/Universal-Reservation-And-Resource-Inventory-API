@@ -22,4 +22,9 @@ class Item extends Model
     public function user() {
         return $this->belongsTo(User::class);
     }
+
+    public function details()
+    {
+        return $this->hasOne(ItemDetail::class, 'item_id');
+    }
 }
