@@ -26,7 +26,5 @@ class CacheService
     public function clearAllCache(): void
     {
         Cache::store('redis')->clear();
-
-        return ;
     }
 }

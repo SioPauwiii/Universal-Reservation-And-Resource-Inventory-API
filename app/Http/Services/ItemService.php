@@ -3,6 +3,7 @@
 // CRUD services for Item model
 namespace App\Http\Services;
 use App\Http\Repositories\ItemRepo;
+use App\Http\Repositories\InventoryItemRepo;
 use App\Http\Services\CacheService;
 use App\Models\Item;
 use Illuminate\Support\Facades\Cache;
@@ -10,17 +11,19 @@ use Illuminate\Support\Facades\Cache;
 
 class ItemService
 {
-    protected $itemRepo, $cacheService;
+    protected $itemRepo, $cacheService, $inventoryRepo;
 
-    public function __construct(ItemRepo $itemRepo, CacheService $cacheService)
+    public function __construct(ItemRepo $itemRepo, CacheService $cacheService, InventoryItemRepo $inventoryRepo)
     {
         $this->itemRepo = $itemRepo;
         $this->cacheService = $cacheService;
+        $this->inventoryRepo = $inventoryRepo;
     }
 
     public function createItem(array $data)
     {
-        return $this->itemRepo->createItem($data);
+        $this->itemRepo->createItem($data);
+        $this->inventoryRepo->createInventoryItem($data['id'], $data['initial_stock'] ?? 1);
     }
 
     public function getAllItems()

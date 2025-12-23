@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\CacheInspectorController;
 use App\Http\Services\CacheService;
 
@@ -34,6 +35,22 @@ Route::patch('/items/unarchive/{id}', [ItemController::class, 'unarchive']);
 
 // item DELETE route
 Route::delete('/items/delete/{id}', [ItemController::class, 'delete']);
+
+// Reservation fendpoints
+// reservation CREATE and CONFIRM/DENY/CANCEL routes
+Route::post('/reservations', [ReservationController::class, 'store']);
+Route::post('/reservations/{id}/confirm', [ReservationController::class, 'confirm']);
+Route::post('/reservations/{id}/cancel', [ReservationController::class, 'cancel']);
+Route::post('/reservations/expire', [ReservationController::class, 'expire']);
+
+// reservation RETRIEVE routes
+Route::get('/reservations/id/{id}', [ReservationController::class, 'fetchById']);
+Route::get('/reservations/user/{userId}', [ReservationController::class, 'fetchByUser']);
+Route::get('/reservations/item/{itemId}', [ReservationController::class, 'fetchByItem']);
+Route::get('/reservations/tenant/{tenantId}', [ReservationController::class, 'fetchByTenant']);
+
+// reservation SEARCH route
+// Route::get('/reservations/find', [ReservationController::class, 'search']);
 
 // Cache inspection endpoint (for testing)
 Route::get('/redis-cache/inspect/{key}', [CacheInspectorController::class, 'inspect']);

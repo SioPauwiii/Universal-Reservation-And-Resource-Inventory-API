@@ -24,7 +24,7 @@ return new class extends Migration
         Schema::create('inventory_items', function (Blueprint $table) {
             $table->id();
             $table->foreignId('item_id')->constrained('items')->onDelete('cascade');
-            $table->bigInteger('location_id')->nullable();
+            // $table->bigInteger('location_id')->nullable();
             $table->integer('total_stock')->default(0);
             $table->integer('available_stock')->default(0);
             $table->integer('version');
