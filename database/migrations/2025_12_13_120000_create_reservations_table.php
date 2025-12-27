@@ -61,7 +61,7 @@ return new class extends Migration
             // $table->foreign('tenant_id')->references('id')->on('tenants');
             // $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('item_id')->references('id')->on('items');
-            $table->foreign('order_reference')->references('order_reference')->on('orders');
+            $table->foreignUuid('order_reference')->references('order_reference')->on('orders');
         });
     }
 

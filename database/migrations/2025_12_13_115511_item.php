@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('items', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('tenant_id')->index();
             $table->string('sku')->unique();
             $table->string('name');
             $table->enum('status', ['active', 'inactive', 'discontinued'])->default('active');

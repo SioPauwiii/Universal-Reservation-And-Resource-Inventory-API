@@ -8,14 +8,17 @@ use App\Http\Requests\LoginRequest;
 use App\Http\Services\AuthService;
 use Illuminate\Http\JsonResponse;
 use App\Http\Requests\RegisterRequest;
+use App\Http\Services\TenantService;
+use App\Http\Requests\TenantRequest;
 
 class AuthController extends Controller
 {
-    protected $authService;
+    protected $authService, $tenantService;
 
     public function __construct()
     {
         $this->authService = new AuthService();
+        $this->tenantService = new TenantService();
     }
 
     public function register(RegisterRequest $request): JsonResponse
@@ -52,5 +55,15 @@ class AuthController extends Controller
     {
         $this->authService->attemptLogout();
         return response()->json(['message' => 'Successfully logged out'], 200);
+    }
+
+    public function RegisterTenant(TenantRequest $request)
+    {
+        $payload = $request->rules();
+        $tenant = $this->tenantService->registerTenant($payload);
+
+        return response()->json([
+            'tenant' => $tenant,
+        ], 201);
     }
 }
