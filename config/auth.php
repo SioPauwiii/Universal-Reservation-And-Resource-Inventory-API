@@ -14,7 +14,8 @@ return [
     */
 
     'defaults' => [
-        'guard' => env('AUTH_GUARD', 'web'),
+        // Set API as default guard for this application to prioritize token auth
+        'guard' => env('AUTH_GUARD', 'api'),
         'passwords' => env('AUTH_PASSWORD_BROKER', 'users'),
     ],
 
@@ -40,6 +41,13 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+
+        // API guard that uses Sanctum bearer tokens. API clients must
+        // send `Authorization: Bearer <token>` on each request.
+        'api' => [
+            'driver' => 'jwt',
+            'provider' => 'jwt_users',
+        ],
     ],
 
     /*
@@ -60,7 +68,7 @@ return [
     */
 
     'providers' => [
-        'users' => [
+        'jwt_users' => [
             'driver' => 'eloquent',
             'model' => env('AUTH_MODEL', App\Models\User::class),
         ],

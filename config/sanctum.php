@@ -15,12 +15,17 @@ return [
     |
     */
 
-    'stateful' => explode(',', env('SANCTUM_STATEFUL_DOMAINS', sprintf(
-        '%s%s',
-        'localhost,localhost:3000,127.0.0.1,127.0.0.1:8000,::1',
-        Sanctum::currentApplicationUrlWithPort(),
-        // Sanctum::currentRequestHost(),
-    ))),
+    /*
+    |--------------------------------------------------------------------------
+    | Stateful Domains
+    |--------------------------------------------------------------------------
+    |
+    | Disabled for token-only API usage. API clients must send
+    | an Authorization: Bearer <token> header. Stateful (cookie)
+    | authentication for SPAs is intentionally turned off.
+    |
+    */
+    'stateful' => [],
 
     /*
     |--------------------------------------------------------------------------
@@ -34,7 +39,8 @@ return [
     |
     */
 
-    'guard' => ['web'],
+    // Do not attempt session-based guards first; use bearer tokens only.
+    'guard' => [],
 
     /*
     |--------------------------------------------------------------------------

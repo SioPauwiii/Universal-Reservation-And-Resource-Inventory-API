@@ -49,19 +49,27 @@ class AuthService
 
     public function attemptLogin(array $credentials): array|JsonResponse
     {
-        if (Auth::attempt($credentials)) {
-            $user = Auth::user();
+        // Token-based login: verify credentials without establishing a session.
+        $email = $credentials['email'] ?? null;
+        $password = $credentials['password'] ?? null;
 
-            if (! $user instanceof User) {
-                return response()->json([ 'message' => 'Authenticated user not found' ], 500);
-            }
-
-            $token = $user->createToken('api_token')->plainTextToken;
-
-            return [ 'success' => true, 'user' => $user, 'token' => $token ];
+        if (empty($email) || empty($password)) {
+            return response()->json([ 'message' => 'Invalid credentials' ], 401);
         }
 
-        return response()->json([ 'message' => 'Invalid credentials' ], 401);
+        $user = User::where('email', $email)->first();
+
+        if (! $user instanceof User) {
+            return response()->json([ 'message' => 'Invalid credentials' ], 401);
+        }
+
+        if (! Hash::check($password, $user->password)) {
+            return response()->json([ 'message' => 'Invalid credentials' ], 401);
+        }
+
+        $token = $user->createToken('api_token')->plainTextToken;
+
+        return [ 'success' => true, 'user' => $user, 'token' => $token ];
     }
 
     public function attemptLogout()
