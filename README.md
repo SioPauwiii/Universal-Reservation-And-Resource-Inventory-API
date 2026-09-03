@@ -11,12 +11,6 @@ An enterprise-grade, high-performance backend architecture built with **Laravel 
 
 ---
 
-## 📋 Short GitHub Repository Description
-
-> *High-performance Laravel 12 & Redis backend architecture for universal resource reservation and inventory management featuring multi-category polymorphic JSON validation, Repository-Service architecture, multi-key caching strategies, and token authentication.*
-
----
-
 ## 🏛 Architecture & Engineering Patterns
 
 The system adheres to modern backend architectural patterns, emphasizing strict separation of concerns, maintainability, and high-throughput read operations.
